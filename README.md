@@ -18,13 +18,13 @@
   "status": "detected",
   "filename": "string.jpg",
   "data": {
-       top_left_x: 200
-       top_left_y: 300
-       width: 150
-       height: 50
-       confidence: 0.8349234234
-       class_id: 1
-    }
+    "top_left_x": 200,
+    "top_left_y": 300,
+    "width": 150,
+    "height": 50,
+    "confidence": 0.8349234234,
+    "class_id": 1
+  }
 }
 
 {
