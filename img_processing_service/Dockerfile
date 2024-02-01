@@ -1,0 +1,23 @@
+FROM python:3.10-bullseye
+
+RUN apt-get update && apt-get install -y libgl1-mesa-glx
+
+WORKDIR img_processing_service/
+
+# Install Poetry
+RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/etc/poetry POETRY_VERSION=1.5.1 python3  && \
+    cd /usr/local/bin && \
+    ln -s /etc/poetry/bin/poetry && \
+    poetry config virtualenvs.create false
+
+COPY pyproject.toml poetry.lock* ./
+
+RUN poetry install --no-root --no-dev
+
+COPY . .
+
+ENV PYTHONPATH "${PYTHONPATH}:/img_processing_service"
+
+CMD sh -c "alembic upgrade head && \
+           gunicorn app.main:app --workers 4 --worker-class \
+           uvicorn.workers.UvicornWorker --bind=0.0.0.0:8000"

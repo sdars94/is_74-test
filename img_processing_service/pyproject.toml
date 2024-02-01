@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "is74-test"
+version = "0.1.0"
+description = ""
+authors = ["sdars94 <sticheeg@yandex.ru>"]
+readme = "README.md"
+packages = [{include = "is74_test"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+uvicorn = "^0.27.0"
+fastapi = {extras = ["all"], version = "^0.109.0"}
+alembic = "^1.13.1"
+sqlalchemy = "^2.0.25"
+asyncpg = "^0.29.0"
+numpy = "^1.26.3"
+opencv-python = "^4.9.0.80"
+gunicorn = "^21.2.0"
+celery = "^5.3.6"
+flower = "^2.0.1"
+redis = "^5.0.1"
+
+
+[tool.poetry.group.dev.dependencies]
+isort = "^5.13.2"
+flake8 = "^7.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

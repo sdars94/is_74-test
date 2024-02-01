@@ -1,0 +1,64 @@
+version: "3.8"
+services:
+
+  postgres:
+    container_name: postgres
+    image: postgres:15-alpine
+    env_file:
+      - .env.img_service
+    restart: unless-stopped
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+    user: postgres
+
+  img_processing_service:
+    container_name: img_processing_service
+    build: ../img_processing_service
+    restart: unless-stopped
+    env_file:
+      - .env.img_service
+    ports:
+      - '8000:8000'
+    depends_on:
+      - postgres
+
+  ml_service:
+    container_name: ml_service
+    build: ../ml_microservice
+    restart: unless-stopped
+    ports:
+      - '5000:5000'
+
+  redis:
+    container_name: redis
+    image: redis:7.2.4-alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+
+  celery_worker:
+    container_name: celery_worker
+    build: ../img_processing_service
+    restart: unless-stopped
+    env_file:
+      - .env.img_service
+    depends_on:
+      - img_processing_service
+      - redis
+    command: celery -A celery -A app.handlers.celery_worker.tasks worker --loglevel=info -c 5
+
+  flower:
+    container_name: flower
+    build: ../img_processing_service
+    restart: unless-stopped
+    env_file:
+      - .env.img_service
+    depends_on:
+      - celery_worker
+    ports:
+      - '5555:5555'
+    command: celery -A app.handlers.celery_worker.conf.celery flower
+
+volumes:
+  db_data:
+  redis_data:
