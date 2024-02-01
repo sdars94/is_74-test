@@ -17,8 +17,8 @@ class Settings(BaseSettings):
     BASE_DIR: Path = Path(__file__).resolve().parent.parent
 
     # Redis (host & port receiving from .env file)
-    REDIS_HOST: str = "1"
-    REDIS_PORT: str = "2"
+    REDIS_HOST: str = "localhost"
+    REDIS_PORT: str = "6379"
     REDIS_URL: RedisDsn | None = None
 
     @field_validator("REDIS_URL", mode="before")
